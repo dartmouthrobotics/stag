@@ -6,9 +6,17 @@
   -->
   <arg name="record"                   default="0" />
   <arg name="publish_gstreamer_to_ros" default="0" />
+  <arg name="no_camera_info"		   default="1" />
   <!--
   <arg name="build_plan_file"          default="param/simple_build_plan.yaml"/>
   -->
+
+  <!-- PUBLISH CAMERA_INFO -->
+  
+  <group if="$(arg no_camera_info)">
+    <node pkg="stag_ros" name="publish_extra_camera_info" type="publish_camera_info.py" output="screen" />
+  </group>
+ 
 
   <node pkg="nodelet" type="nodelet" name="bluerov_nodelet_manager" args="manager" output="screen" respawn="true">
       <param name="num_worker_threads" value="2" />

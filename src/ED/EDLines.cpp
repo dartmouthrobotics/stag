@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <float.h>
 
 #include "EDInternals.h"
@@ -38,7 +39,7 @@ void JoinCollinearLines(EDLines *lines, double MAX_DISTANCE_BETWEEN_TWO_LINES=6.
 void DumpLines2File(EDLines *lines, char *fname){
 
   //Burak - suppresses _CRT_SECURE_NO_DEPRECATE warnings
-  #pragma warning(disable: 4996) 
+  #pragma warning(disable: 4996)
 
   FILE *fp = fopen(fname, "w");
 
@@ -77,9 +78,9 @@ void DumpLines2File(EDLines *lines, char *fname){
         angle = ComputeAngleBetweenTwoLines(&lines->lines[j], &lines->lines[next], &dist);
       } //end-if
 
-      fprintf(fp, "|   %3d |    %3d    |%7.1lf|%9.5lf|%6d|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|\n", 
-              j, lines->lines[j].segmentNo, lines->lines[j].a, lines->lines[j].b, lines->lines[j].invert, 
-              lines->lines[j].sx, lines->lines[j].sy, lines->lines[j].ex, lines->lines[j].ey, angle, dist, len);            
+      fprintf(fp, "|   %3d |    %3d    |%7.1lf|%9.5lf|%6d|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|%8.1lf|\n",
+              j, lines->lines[j].segmentNo, lines->lines[j].a, lines->lines[j].b, lines->lines[j].invert,
+              lines->lines[j].sx, lines->lines[j].sy, lines->lines[j].ex, lines->lines[j].ey, angle, dist, len);
     } //end-for
   } //end-for
   fprintf(fp, "+=======+===========+=======+=========+===============+========+========+========+========+========+========+\n");
@@ -105,7 +106,7 @@ void JoinCollinearLines(EDLines *lines, double MAX_DISTANCE_BETWEEN_TWO_LINES, d
       if (lines->lines[j].segmentNo != segmentNo) break;
 
       // Try to combine this line with the previous line in this segment
-      if (TryToJoinTwoLineSegments(&lines->lines[lastLineIndex], &lines->lines[j], 
+      if (TryToJoinTwoLineSegments(&lines->lines[lastLineIndex], &lines->lines[j],
                                    MAX_DISTANCE_BETWEEN_TWO_LINES, MAX_ERROR) == false){
         lastLineIndex++;
         if (lastLineIndex != j) lines->lines[lastLineIndex] = lines->lines[j];  // copy the line
@@ -145,7 +146,7 @@ void SplitSegment2Lines(double *x, double *y, int noPixels, int segmentNo, EDLin
     double lastA, lastB, error;
     int lastInvert;
 
-    while (noPixels >= MIN_LINE_LEN){  
+    while (noPixels >= MIN_LINE_LEN){
       LineFit(x, y, MIN_LINE_LEN, &lastA, &lastB, &error, &lastInvert);
       if (error <= 0.5){valid = true; break;}
 
@@ -183,18 +184,18 @@ void SplitSegment2Lines(double *x, double *y, int noPixels, int segmentNo, EDLin
           badPixelCount++;
           if (badPixelCount >= 5) break;
         } //end-if
-		
+
 		//Burak - Fits a new line every 10 good pixel
 		  if (goodPixelCount % 10 == 0)
 				LineFit(x, y, lastGoodIndex - startIndex + len + 1, &lastA, &lastB, lastInvert);
 		  //Burak - Fits a new line every 10 good pixel
         index++;
       } //end-while
-        
+
       if (goodPixelCount >= 2){
         len += lastGoodIndex - startIndex + 1;
         LineFit(x, y, len, &lastA, &lastB, lastInvert);  // faster LineFit
-        index = lastGoodIndex+1;          
+        index = lastGoodIndex+1;
       } // end-if
 
       if (goodPixelCount < 2 || index >= noPixels){
@@ -248,12 +249,12 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
 
   /// Compute LUT for NFA computation
   timer.Start();
-  
+
   NFALUT *LUT = new NFALUT((width+height)/8, prob, logNT);
 
   timer.Stop();
   lines->LUTComputationTime = timer.ElapsedTime();
-  
+
   if (invalidLines) invalidLines->clear();
 
   int noValidLines = 0;
@@ -280,8 +281,8 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
     bool valid = false;
 
     // Accept very long lines without testing. They are almost never invalidated.
-    if (ls->len >= 80){ 
-      valid = true;  
+    if (ls->len >= 80){
+      valid = true;
 
     // Validate short line segments by a line support region rectangle having width=2
    } else if (ls->len <= 25){
@@ -310,12 +311,12 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
         // gx = (C-A) + (E-D) + (H-F)
         // gy = (F-A) + (G-B) + (H-C)
         //
-        // To make this faster: 
+        // To make this faster:
         // com1 = (H-A)
         // com2 = (C-F)
         // Then: gx = com1 + com2 + (E-D) = (H-A) + (C-F) + (E-D) = (C-A) + (E-D) + (H-F)
         //       gy = com2 - com1 + (G-B) = (H-A) - (C-F) + (G-B) = (F-A) + (G-B) + (H-C)
-        // 
+        //
         int com1 = srcImg[(r+1)*width+c+1] - srcImg[(r-1)*width+c-1];
         int com2 = srcImg[(r-1)*width+c+1] - srcImg[(r+1)*width+c-1];
 
@@ -330,7 +331,7 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
       } //end-for
 
       // Check validation by NFA computation (fast due to LUT)
-      valid = checkValidationByNFA(count, aligned, LUT);    
+      valid = checkValidationByNFA(count, aligned, LUT);
       if (valid == false) valid = ValidateLineSegmentRect(srcImg, width, height, x, y, ls, LUT);
     } //end-else
 
@@ -342,7 +343,7 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
       invalidLines->add(&lines->lines[i]);
     } //end-else
   } //end-for
-  
+
   lines->noLines = noValidLines;
 
   delete LUT;
@@ -355,7 +356,7 @@ void ValidateLineSegments(EdgeMap *map, unsigned char *srcImg, EDLines *lines, E
 } // end-ValidateLineSegments
 
 //====================================================================================
-/// The following rectangle enumeration code was taken from the LSD distribution 
+/// The following rectangle enumeration code was taken from the LSD distribution
 /// and adapted for our purposes. We hope that LSD guys are OK with this :-)
 ///
 /// Enumerate the points within a rectangle of width 2 given its two end points
@@ -378,7 +379,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
   double vLen = sqrt(dx*dx + dy*dy);
 
   // make unit vector
-  dx = dx/vLen;    
+  dx = dx/vLen;
   dy = dy/vLen;
 
   /* build list of rectangle corners ordered
@@ -468,7 +469,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
           if      (vy[0]<vy[3] ) ys = vy[0];
           else if (vy[0]>vy[3] ) ys = vy[3];
           else     ys = vy[0] + (x-vx[0]) * (vy[3]-vy[0]) / (vx[3]-vx[0]);
-        } else 
+        } else
           ys = vy[0] + (x-vx[0]) * (vy[3]-vy[0]) / (vx[3]-vx[0]);
 
       } else {
@@ -477,7 +478,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
           if      (vy[3]<vy[2] ) ys = vy[3];
           else if (vy[3]>vy[2] ) ys = vy[2];
           else     ys = vy[3] + (x-vx[3]) * (y2-vy[3]) / (vx[2]-vx[3]);
-        } else 
+        } else
           ys = vy[3] + (x-vx[3]) * (vy[2]-vy[3]) / (vx[2]-vx[3]);
       } //end-else
 
@@ -502,7 +503,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
           if      (vy[0]<vy[1] ) ye = vy[1];
           else if (vy[0]>vy[1] ) ye = vy[0];
           else     ye = vy[0] + (x-vx[0]) * (vy[1]-vy[0]) / (vx[1]-vx[0]);
-        } else 
+        } else
           ye = vy[0] + (x-vx[0]) * (vy[1]-vy[0]) / (vx[1]-vx[0]);
 
       } else {
@@ -511,7 +512,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
           if      (vy[1]<vy[2] ) ye = vy[2];
           else if (vy[1]>vy[2] ) ye = vy[1];
           else     ye = vy[1] + (x-vx[1]) * (vy[2]-vy[1]) / (vx[2]-vx[1]);
-        } else 
+        } else
           ye = vy[1] + (x-vx[1]) * (vy[2]-vy[1]) / (vx[2]-vx[1]);
       } //end-else
 
@@ -542,7 +543,7 @@ void EnumerateRectPoints(double sx, double sy, double ex, double ey,
 ///
 bool ValidateLineSegmentRect(unsigned char *srcImg, int width, int height, int *x, int *y, LineSegment *ls, NFALUT *LUT){
   void EnumerateRectPoints(double sx, double sy, double ex, double ey, int x[], int y[], int *pNoPoints);
-  
+
 #define PI 3.14159265358979323846
 #define PRECISON_ANGLE 22.5
   static double prec = (PRECISON_ANGLE/180)*PI;
@@ -588,12 +589,12 @@ bool ValidateLineSegmentRect(unsigned char *srcImg, int width, int height, int *
     // gx = (C-A) + (E-D) + (H-F)
     // gy = (F-A) + (G-B) + (H-C)
     //
-    // To make this faster: 
+    // To make this faster:
     // com1 = (H-A)
     // com2 = (C-F)
     // Then: gx = com1 + com2 + (E-D) = (H-A) + (C-F) + (E-D) = (C-A) + (E-D) + (H-F)
     //       gy = com2 - com1 + (G-B) = (H-A) - (C-F) + (G-B) = (F-A) + (G-B) + (H-C)
-    // 
+    //
     int com1 = srcImg[(r+1)*width+c+1] - srcImg[(r-1)*width+c-1];
     int com2 = srcImg[(r-1)*width+c+1] - srcImg[(r+1)*width+c-1];
 
@@ -616,7 +617,7 @@ bool ValidateLineSegmentRect(unsigned char *srcImg, int width, int height, int *
 int ComputeMinLineLength(int width, int height){
   // The reason we are dividing the theoretical minimum line length by 2 is because
   // we now test short line segments by a line support region rectangle having width=2.
-  // This means that within a line support region rectangle for a line segment of length "l" 
+  // This means that within a line support region rectangle for a line segment of length "l"
   // there are "2*l" many pixels. Thus, a line segment of length "l" has a chance of getting
   // validated by NFA.
 
@@ -648,7 +649,7 @@ EDLines *DetectLinesByED(EdgeMap*& map, unsigned char *srcImg, int width, int he
   /* used with g = sqrt(gx*gx+gy*gy) */
   // This threshold should in fact be 10.45 (4/sin(22.5)=10.45). But, since
   // we are computing the gradient over the smoothed image, a smaller value must
-  // be used. 8 seems to give results closest to the theoretical threshold value, 
+  // be used. 8 seems to give results closest to the theoretical threshold value,
   // and thus results closest to LSD.
   int GRADIENT_THRESH = 8; // with g = sqrt(gx*gx+gy*gy)
 #endif
@@ -666,7 +667,7 @@ EDLines *DetectLinesByED(EdgeMap*& map, unsigned char *srcImg, int width, int he
 
   SmoothImage(srcImg, smoothImg, width, height, smoothingSigma);
   ComputeGradientMapByLSD(smoothImg, gradImg, dirImg, width, height, GRADIENT_THRESH);
-  map = DoDetectEdgesByED(gradImg, dirImg, width, height, GRADIENT_THRESH, ANCHOR_THRESH);  
+  map = DoDetectEdgesByED(gradImg, dirImg, width, height, GRADIENT_THRESH, ANCHOR_THRESH);
 
 #if 0
   void SaveImage(char *, char *, int, int, int);
@@ -689,10 +690,10 @@ EDLines *DetectLinesByED(EdgeMap*& map, unsigned char *srcImg, int width, int he
   lines->MIN_LINE_LEN = ComputeMinLineLength(width, height);
 
   // Too small?
-//  if (lines->MIN_LINE_LEN < 8) lines->MIN_LINE_LEN = 8; 
+//  if (lines->MIN_LINE_LEN < 8) lines->MIN_LINE_LEN = 8;
 
   // Min line length 9 seems to give the closest results to LSD. Keep this?
-  if (lines->MIN_LINE_LEN < 9) lines->MIN_LINE_LEN = 9;   
+  if (lines->MIN_LINE_LEN < 9) lines->MIN_LINE_LEN = 9;
 
   // A min line length of 10 gives less lines than LSD, but the lines are much cleaner
 //  if (lines->MIN_LINE_LEN < 10) lines->MIN_LINE_LEN = 10;
@@ -790,10 +791,10 @@ EDLines *DetectLinesByEDPF(EdgeMap*& map, unsigned char *srcImg, int width, int 
   lines->MIN_LINE_LEN = ComputeMinLineLength(width, height);
 
   // Too small?
-//  if (lines->MIN_LINE_LEN < 8) lines->MIN_LINE_LEN = 8; 
+//  if (lines->MIN_LINE_LEN < 8) lines->MIN_LINE_LEN = 8;
 
   // Min line length 9 seems to give the closest results to LSD. Keep this?
-  if (lines->MIN_LINE_LEN < 9) lines->MIN_LINE_LEN = 9;   
+  if (lines->MIN_LINE_LEN < 9) lines->MIN_LINE_LEN = 9;
 
   // A min line length of 10 gives less lines than LSD, but the lines are much cleaner
 //  if (lines->MIN_LINE_LEN < 10) lines->MIN_LINE_LEN = 10;

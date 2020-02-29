@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--
+  <arg name="origin_marker_id"         default="1" />
+  -->
+  <arg name="record"                   default="0" />
+  <arg name="publish_gstreamer_to_ros" default="0" />
+  <!--
+  <arg name="build_plan_file"          default="param/simple_build_plan.yaml"/>
+  -->
+
+  <node pkg="nodelet" type="nodelet" name="bluerov_nodelet_manager" args="manager" output="screen" respawn="true">
+      <param name="num_worker_threads" value="2" />
+  </node>
+
+<!--
+  <include file="$(find spinnaker_sdk_camera_driver)/launch/acquisition.launch">
+    <arg name="nodelet_manager_name" value="bluerov_nodelet_manager"/>
+    <arg name="config_file" value="$(find bluerov_controller)/param/spinnaker_color_configuration.yaml"/>
+    <arg name="start_nodelet_manager" value="false"/>
+    <arg name="color" value="true"/>
+    <arg name="binning" value="2"/>
+  </include>
+-->
+
+<!--
+  <include file="$(find spinnaker_sdk_camera_driver)/launch/acquisition_color.launch">
+    <arg name="nodelet_manager_name" value="bluerov_nodelet_manager"/>
+    <arg name="config_file" value="$(find bluerov_controller)/param/spinnaker_configuration.yaml"/>
+    <arg name="start_nodelet_manager" value="false"/>
+    <arg name="color" value="false"/>
+    <arg name="binning" value="2"/>
+  </include>
+-->
+
+  <!--
+  <group if="$(eval arg('publish_gstreamer_to_ros') == 0)">
+    <node pkg="nodelet" name="camera" type="nodelet" args="load cv_camera/CvCameraNodelet bluerov_nodelet_manager" output="screen">
+      <param name="image_width" type="int" value="640"/>
+      <param name="image_height" type="int" value="480"/>
+      <param name="frame_id" type="string" value="/v4l_frame" />
+      <param name="camera_info_url" type="string" value="package://bluerov_controller/param/camera_calibration_640_480_land.yaml"/>
+
+      <param name="device_id" type="int" value="0"/>
+      <param name="rate" type="double" value="30.0"/>
+    </node>
+  </group>
+  -->
+
+  <node pkg="nodelet" type="nodelet" name="stag_ros" output="screen" args="load stag_ros/StagNodelet bluerov_nodelet_manager" respawn="true">
+    <param name="camera_image_topic" type="string" value="/camera/image_raw" />
+    <param name="camera_info_topic" type="string" value="/camera/camera_info" />
+    <param name="tag_id_type" type="int" value="21" />
+    <param name="marker_frame_prefix" type="string" value="/ar_marker_" />
+    <param name="default_marker_size" type="double" value="0.162" />
+    <param name="output_frame_id"     type="string" value="base_link" />
+    <param name="image_frame_id"      type="string" value="v4l_frame" />
+    <param name="marker_message_topic" type="string" value="/bluerov/ar_tag_detector" />
+    <rosparam command="load" param="marker_sizes_by_id" file="$(find stag_ros)/param/monika_marker_sizes_by_id.yaml"/>
+    <rosparam command="load" file="$(find stag_ros)/param/marker_bundles.yaml"/>
+  </node>
+
+<!--
+  <node pkg="bluerov_controller" type="bluerov_controller_simple_localization_node" name="bluerov_controller_simple_localization" output="screen">
+    <param name="origin_marker_id" type="int" value="$(arg origin_marker_id)"/>
+
+    <rosparam param="marker_names_by_id">[{id: 3, name: "/platform_2"}, {id: 1, name: "/platform_1"}, {id: 17, name: "/block_17"}, {id: 16, name: "/block_16"}, {id: 15, name: "/block_15"}, {id: 7, name: "/block_7"}, {id: 11, name: "/block_11"}]
+    </rosparam>
+
+    <rosparam command="load" file="$(find bluerov_controller)/calibration/dropoff_slot_locations.yaml"></rosparam>
+  </node>
+
+  <node pkg="bluerov_controller" type="bluerov_controller_node" name="bluerov_controller_node" output="screen" respawn="true">
+    <rosparam param="build_plan" command="load" file="$(find bluerov_controller)/$(arg build_plan_file)"></rosparam>
+    <rosparam command="load" file="$(find bluerov_controller)/param/control-software-configuration.yaml"></rosparam>
+  </node>
+-->
+  <!-- starts bluerov utilities:: joint state publisher, mavros-->
+  <!--<include file="$(find bluerov_bringup)/launch/bluerov_bringup.launch">
+    <arg name="record" value="$(arg record)" />
+    <arg name="publish_gstreamer_to_ros" value="$(arg publish_gstreamer_to_ros)" />
+  </include>-->
+</launch>

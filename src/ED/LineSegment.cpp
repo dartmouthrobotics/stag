@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "LineSegment.h"
 
@@ -41,7 +42,7 @@ double ComputeAngleBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, double *p
 
 #define PI 3.14159
   angle = (angle/PI)*180;  // convert to degrees
-  
+
   if (pMinDist){
     //  Compute the distance between (ex, ey) of ls1 & (sx, sy) of ls2
     double dx = ls1->ex - ls2->sx;
@@ -49,7 +50,7 @@ double ComputeAngleBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, double *p
 
     *pMinDist = sqrt(dx*dx + dy*dy);
   } //end-if
-    
+
   return angle;
 } //end-ComputeAngleBetweenTwoLines
 
@@ -128,7 +129,7 @@ double ComputeAngleBetweenTwoLines2(LineSegment *ls1, LineSegment *ls2, double *
       break;
   } //end-case
 
-  
+
   double v1Len = sqrt(vx1*vx1 + vy1*vy1);
   double v2Len = sqrt(vx2*vx2 + vy2*vy2);
 
@@ -171,7 +172,7 @@ double ComputeMinDistanceBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, int
   if (d < min){min = d; which = EE;}
 
   if (pwhich) *pwhich = which;
-  return min;    
+  return min;
 } //end-ComputeMinDistanceBetweenTwoLines
 
 ///-------------------------------------------------------------------------------
@@ -194,8 +195,8 @@ void FindIntersectionPoint(LineSegment *ls1, LineSegment *ls2, double *xInt, dou
 
   } else if (ls1->invert == 1 && ls2->invert == 0){
     // LS1 is of the form x = by + a and LS2 is of the form y = bx + a
-    y = (ls2->b*ls1->a + ls2->a)/(1.0-ls1->b*ls2->b);    
-    x = ls1->b*y + ls1->a;    
+    y = (ls2->b*ls1->a + ls2->a)/(1.0-ls1->b*ls2->b);
+    x = ls1->b*y + ls1->a;
 
   } else {  // ls1->invert == 1 && ls2->invert == 1
     // Both lines are of the form x = by + a
@@ -236,7 +237,7 @@ bool TryToJoinTwoLineSegments(LineSegment *ls1, LineSegment *ls2, double MAX_DIS
   if (prevLen > nextLen){shorter = ls2; longer = ls1;}
 
 #if 0
-  // Use 5 points to check for collinearity  
+  // Use 5 points to check for collinearity
 #define POINT_COUNT 5
   double decr = 1.0/(POINT_COUNT-1);
   double alpha = 1.0;
@@ -256,7 +257,7 @@ bool TryToJoinTwoLineSegments(LineSegment *ls1, LineSegment *ls2, double MAX_DIS
 #undef POINT_COUNT
 
 #else
-  // Just use 3 points to check for collinearity  
+  // Just use 3 points to check for collinearity
   dist = ComputeMinDistance(shorter->sx, shorter->sy, longer->a, longer->b, longer->invert);
   dist += ComputeMinDistance((shorter->sx+shorter->ex)/2.0, (shorter->sy+shorter->ey)/2.0, longer->a, longer->b, longer->invert);
   dist += ComputeMinDistance(shorter->ex, shorter->ey, longer->a, longer->b, longer->invert);
@@ -279,7 +280,7 @@ bool TryToJoinTwoLineSegments(LineSegment *ls1, LineSegment *ls2, double MAX_DIS
   } else if (which == 2){ // ES
     ls1->ex = ls2->ex;
     ls1->ey = ls2->ey;
-    
+
   } else {                // EE
     ls1->ex = ls2->sx;
     ls1->ey = ls2->sy;
@@ -351,7 +352,7 @@ bool TryToJoinTwoLineSegments(LineSegment *ls1, LineSegment *ls2, double MAX_DIS
   // Update the first line's parameters
   if (ls1->firstPixelIndex + ls1->len + 5 >= ls2->firstPixelIndex) ls1->len += ls2->len;
   else if (ls2->len > ls1->len){
-    ls1->firstPixelIndex = ls2->firstPixelIndex; 
+    ls1->firstPixelIndex = ls2->firstPixelIndex;
     ls1->len = ls2->len;
   } //end-if
 
@@ -364,7 +365,7 @@ bool TryToJoinTwoLineSegments(LineSegment *ls1, LineSegment *ls2, double MAX_DIS
 /// Traces the points on the line from (sx, sy) --> (ex, ey)
 /// using only integer arithmetic using the famous Bresenham line tracking algorithm
 /// The points on the line are filled into px and py arrays. No of points are also returned
-/// 
+///
 void BresenhamLineTrace(int sx, int sy, int ex, int ey, int px[], int py[], int *noPoints){
 	int dx = ex-sx;
 	int dy = ey-sy;
@@ -397,7 +398,7 @@ void BresenhamLineTrace(int sx, int sy, int ex, int ey, int px[], int py[], int 
 				d += incrNE;
 				x += xIncr;
 				y += yIncr;
-			} //end-else 
+			} //end-else
 		} //end-while
 
 	} else {
@@ -427,7 +428,7 @@ void BresenhamLineTrace(int sx, int sy, int ex, int ey, int px[], int py[], int 
 				d += incrNE;
 				y += yIncr;
 				x += xIncr;
-			} //end-else 
+			} //end-else
 		} //end-while
 	} //end-else
 
@@ -452,7 +453,7 @@ void ComputeClosestPoint(double x1, double y1, double a, double b, int invert, d
       double c = y1-d*x1;
 
       x2 = (a-c)/(d-b);
-      y2 = a+b*x2;      
+      y2 = a+b*x2;
     } //end-else
 
   } else {
@@ -467,7 +468,7 @@ void ComputeClosestPoint(double x1, double y1, double a, double b, int invert, d
       double c = x1-d*y1;
 
       y2 = (a-c)/(d-b);
-      x2 = a+b*y2;      
+      x2 = a+b*y2;
     } //end-else
   } //end-else
 
@@ -493,7 +494,7 @@ double ComputeMinDistance(double x1, double y1, double a, double b, int invert){
       double c = y1-d*x1;
 
       x2 = (a-c)/(d-b);
-      y2 = a+b*x2;      
+      y2 = a+b*x2;
     } //end-else
 
   } else {
@@ -508,7 +509,7 @@ double ComputeMinDistance(double x1, double y1, double a, double b, int invert){
       double c = x1-d*y1;
 
       y2 = (a-c)/(d-b);
-      x2 = a+b*y2;      
+      x2 = a+b*y2;
     } //end-else
   } //end-else
 
@@ -606,7 +607,7 @@ void LineFit(double *x, double *y, int count, double *a, double *b, double *e, i
 
   } else {
     *invert = 0;
-  } //end-else  
+  } //end-else
 
   // Now compute Sxx & Sxy
   for (int i=0; i<count; i++) {

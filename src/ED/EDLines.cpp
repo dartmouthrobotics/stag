@@ -757,15 +757,15 @@ EDLines *DetectLinesByED(EdgeMap*& map, unsigned char *srcImg, int width, int he
 // Burak - original function decleration: EDLines *DetectLinesByEDPF(unsigned char *srcImg, int width, int height, EDLines *invalidLines){
 EDLines *DetectLinesByEDPF(EdgeMap*& map, unsigned char *srcImg, int width, int height, bool flagOnlyUseEdgeSegmentLoops, int thresManhDist){
 	// Burak - added the next line
-	EDLines *invalidLines = NULL;
-	EDLines *lines = new EDLines(width, height);
+  EDLines *invalidLines = NULL;
+  EDLines *lines = new EDLines(width, height);
 
   /*----------- DETECT EDGES ----------------*/
   Timer timer;
   timer.Start();
 
   // Detect edges by edge drawing parameter free (EDPF)
-  map = DetectEdgesByEDPF(srcImg, width, height);   // Detect edges by EDPF
+  map = DetectEdgesByEDPF(srcImg, width, height, 1.0);   // Detect edges by EDPF
 
   // Burak - find edge loops
   bool* validSegments = new bool[map->noSegments];

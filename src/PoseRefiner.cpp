@@ -10,7 +10,7 @@ Mat optEllipse;
 class Refine;
 
 
-void PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
+bool PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
 {
 	// we find an edge segment loop that belongs to the circular border, and fit an ellipse to it
 	// the edge segment loop needs pass closely to the circular border when backprojected
@@ -42,12 +42,14 @@ void PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
 	for (int indEdgeSegment = 0; indEdgeSegment < edgeMap->noSegments; indEdgeSegment++)
 	{
 		// skip if the edge segment is too short
-		if (edgeMap->segments[indEdgeSegment].noPixels < minEdgeSegmentLength)
+		if (edgeMap->segments[indEdgeSegment].noPixels < minEdgeSegmentLength) {
 			continue;
+        }
 
 		// skip if the edge segment is not a loop
-		if (squaredDistance(Point2d(edgeMap->segments[indEdgeSegment].pixels[0].c, edgeMap->segments[indEdgeSegment].pixels[0].r), Point2d(edgeMap->segments[indEdgeSegment].pixels[edgeMap->segments[indEdgeSegment].noPixels - 1].c, edgeMap->segments[indEdgeSegment].pixels[edgeMap->segments[indEdgeSegment].noPixels - 1].r)) > loopThres * loopThres)
+		if (squaredDistance(Point2d(edgeMap->segments[indEdgeSegment].pixels[0].c, edgeMap->segments[indEdgeSegment].pixels[0].r), Point2d(edgeMap->segments[indEdgeSegment].pixels[edgeMap->segments[indEdgeSegment].noPixels - 1].c, edgeMap->segments[indEdgeSegment].pixels[edgeMap->segments[indEdgeSegment].noPixels - 1].r)) > loopThres * loopThres) {
 			continue;
+        }
 
 		// sample the edge segment, skip if any parts are outside the marker
 		bool skipBecauseOutside = false;
@@ -109,7 +111,7 @@ void PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
 
 	// do not refine the pose if none of the edge segments were satisfactory
 	if (indChosenSegment == -1)
-		return;
+		return false;
 		
 
 	// fit an ellipse to the edge pixels
@@ -134,11 +136,14 @@ void PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
 	marker.C.at<double>(1, 2) = marker.C.at<double>(2, 1) = -coeffs[4] / 2;
 	marker.C.at<double>(2, 2) = coeffs[5];
 
+    cv::TermCriteria terminationCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 800000, 0.0000001);
 	// refine the pose
 	optEllipse = marker.C;
 	cv::Ptr<cv::DownhillSolver> solver = cv::DownhillSolver::create();
 	cv::Ptr<cv::MinProblemSolver::Function> ptr_F = cv::makePtr<Refine>();
 	solver->setFunction(ptr_F);
+    solver->setTermCriteria(terminationCriteria);
+
 	cv::Mat x(1, 9, CV_64FC1);
 
 	for (int i = 0; i < 3; i++)
@@ -164,6 +169,8 @@ void PoseRefiner::refineMarkerPose(EDInterface* edInterface, Marker& marker)
 	marker.corners[1] = projectPoint(Point2d(1, 0), marker.H);
 	marker.corners[2] = projectPoint(Point2d(1, 1), marker.H);
 	marker.corners[3] = projectPoint(Point2d(0, 1), marker.H);
+
+    return true;
 }
 
 

@@ -11,7 +11,5 @@ FILE(GLOB ED_sources src/ED/*.cpp)
 
 LIST(APPEND all_source_files ${ED_sources})
 
-include_directories(modules/thread-pool-cpp/include)
-
 add_executable(main ${all_source_files})
 target_link_libraries(main ${OpenCV_LIBS} Threads::Threads)

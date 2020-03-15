@@ -3,6 +3,8 @@
 
 #include "Quad.h"
 
+namespace stag {
+
 class Marker : public Quad 
 {
 public:
@@ -14,4 +16,5 @@ public:
 	void shiftCorners2(int shift);
 };
 
+} // namespace stag
 #endif

@@ -1,7 +1,9 @@
 #ifndef LINE_SEGMENT_H
 #define LINE_SEGMENT_H
 
-#define NULL 0
+#define STAG_NULL 0
+
+namespace stag {
 
 struct LineSegment {
   double a, b;          // y = a + bx (if invert = 0) || x = a + by (if invert = 1)
@@ -28,14 +30,14 @@ double LineSegmentLength(LineSegment *ls);
 /// SE -- 01 - 1  (sx1, sy1) <--> (ex2, ey2)
 /// ES -- 10 - 2  (ex1, ey1) <--> (sx2, sy2)
 /// EE -- 11 - 3  (ex1, ey1) <--> (ex2, ey2)
-double ComputeMinDistanceBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, int *pwhich=NULL);
+double ComputeMinDistanceBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, int *pwhich=STAG_NULL);
 
 /// Computes the angle between two line segments
 /// Assumes that (ex, ey) of ls1 is closer to (sx, ey) of ls2
-double ComputeAngleBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, double *pMinDist = NULL);
+double ComputeAngleBetweenTwoLines(LineSegment *ls1, LineSegment *ls2, double *pMinDist = STAG_NULL);
 
 /// Computes the angle (in degrees) between two line segments
-double ComputeAngleBetweenTwoLines2(LineSegment *ls1, LineSegment *ls2, double *pMinDist = NULL, int *pwhich=NULL);
+double ComputeAngleBetweenTwoLines2(LineSegment *ls1, LineSegment *ls2, double *pMinDist = STAG_NULL, int *pwhich=STAG_NULL);
 
 /// Computes the intersection of two line segments
 void FindIntersectionPoint(LineSegment *ls1, LineSegment *ls2, double *xInt, double *yInt);
@@ -69,4 +71,5 @@ void LineFit(double *x, double *y, int count, double *a, double *b, double *e, i
 /// This line fit assumes that the direction of the line (invert) is known by a previous computation
 void LineFit(double *x, double *y, int count, double *a, double *b, int invert);
 
+} // namespace stag
 #endif

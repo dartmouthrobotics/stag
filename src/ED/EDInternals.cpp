@@ -5,6 +5,8 @@
 
 #include "EDInternals.h"
 
+namespace stag {
+
 /// Special defines
 #define EDGE_VERTICAL   1
 #define EDGE_HORIZONTAL 2
@@ -2890,3 +2892,5 @@ EdgeMap *DoDetectEdgesByED(short *gradImg, int width, int height, int GRADIENT_T
 
   return map;
 } //end-DoDetectEdgesByED
+
+} // namespace stag

@@ -3,6 +3,8 @@
 
 //#include <windows.h>
 
+namespace stag {
+
 class Timer {
 private:
   //__int64 freq, tStart, tStop;
@@ -31,4 +33,5 @@ public:
   } //end-Elapsed
 };
 
+} // namespace stag
 #endif

@@ -5,6 +5,8 @@
 #include "ImageSmooth.h"
 #include "ImageSmoothCV.h"
 
+namespace stag {
+
 ///----------------------------------------------------------
 /// Copy from our buffer to Ipl image buffer taking care of the alignment
 ///
@@ -154,4 +156,4 @@ static void GaussFilter(unsigned char *src, unsigned char *dst, int width, int h
 #endif
 } //end-GaussFilter
 
-
+} // namespace stag

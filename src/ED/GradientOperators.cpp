@@ -5,6 +5,8 @@
 #include "GradientOperatorsCV.h"
 #include "Utilities.h"
 
+namespace stag {
+
 /// Special defines
 #define EDGE_VERTICAL   1
 #define EDGE_HORIZONTAL 2
@@ -1434,3 +1436,5 @@ void ComputeGradientMapByDiZenzo5x5(unsigned char *smoothCh1Img, unsigned char *
   double scale = 255.0/max;
   for (int i=0; i<width*height; i++) gradImg[i] = (short)(gradImg[i]*scale);
 } //end-ComputeGradientMapByDiZenzo5x5
+
+} // namespace stag

@@ -4,6 +4,8 @@
 #include <vector>
 #include "opencv2/opencv.hpp"
 
+namespace stag {
+
 using std::vector;
 
 
@@ -25,4 +27,5 @@ public:
 	void estimateHomography();
 };
 
+} // namespace stag
 #endif

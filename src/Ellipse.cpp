@@ -3,11 +3,16 @@
 #include <string.h>
 #include <math.h>
 
+namespace stag {
 
 inline double FastSinHP(double x);
 inline double FastCosHP(double x);
 
+} // namespace stag
+
 #include "Ellipse.h"
+
+namespace stag {
 
 #define pi 3.14159265
 #define BOOKSTEIN 0       // method1
@@ -1554,3 +1559,5 @@ inline double FastCosHP(double x)
 
 	return res;
 }
+
+} // namespace stag

@@ -1,6 +1,8 @@
 #ifndef GRADIENT_OPERATORS_H
 #define GRADIENT_OPERATORS_H
 
+namespace stag {
+
 void ComputeGradientMapByLSD(unsigned char *smoothImg, short *gradImg, unsigned char *dirImg, int width, int height, int GRADIENT_THRESH);
 void ComputeGradientMapByPrewitt(unsigned char *smoothImg, short *gradImg, unsigned char *dirImg, int width, int height, int GRADIENT_THRESH);
 
@@ -68,4 +70,5 @@ void ComputeGradientMapByCIE94(unsigned char *smoothCh1Img, unsigned char *smoot
 void ComputeGradientMapByCIEDE2000(unsigned char *smoothCh1Img, unsigned char *smoothCh2Img, unsigned char *smoothCh3Img, 
                                    short *gradImg, unsigned char *dirImg, int width, int height);
 
+} // namespace stag
 #endif

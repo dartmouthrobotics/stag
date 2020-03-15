@@ -3,6 +3,8 @@
 
 #include "EdgeMap.h"
 
+namespace stag {
+
 /// Detect Edges by Edge Drawing (ED). smoothingSigma must be >= 1.0
 EdgeMap *DetectEdgesByED(unsigned char *srcImg, int width, int height, GradientOperator op=PREWITT_OPERATOR, int GRADIENT_THRESH=20, int ANCHOR_THRESH=0, double smoothingSigma=1.0);
 
@@ -62,4 +64,5 @@ EdgeMap *DetectEdgesByED10V(unsigned char *ch1Img, unsigned char *ch2Img, unsign
 
 EdgeMap *DetectEdgesByED11(unsigned char *ch1Img, unsigned char *ch2Img, unsigned char *ch3Img, int width, int height, double smoothingSigma);
 
+} // namespace stag
 #endif

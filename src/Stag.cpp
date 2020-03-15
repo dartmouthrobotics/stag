@@ -4,6 +4,8 @@
 
 #define HALF_PI 1.570796326794897
 
+namespace stag {
+
 using cv::Mat;
 using cv::Point2d;
 
@@ -250,3 +252,5 @@ Mat Stag::createMatFromPolarCoords(double radius, double radians, double circleR
 	point.at<double>(2) = 1;
 	return point;
 }
+
+} // namespace stag

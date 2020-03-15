@@ -5,6 +5,8 @@
 #include "EDInterface.h"
 #include "Quad.h"
 
+namespace stag {
+
 using std::vector;
 
 
@@ -71,4 +73,5 @@ public:
 	const vector<Quad>& getDistortedQuads() const;
 };
 
+} // namespace stag
 #endif

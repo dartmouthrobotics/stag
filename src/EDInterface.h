@@ -6,6 +6,8 @@
 #include "ED/EDLines.h"
 #include "ED/EdgeMap.h"
 
+namespace stag {
+
 class EDInterface
 {
 	EdgeMap* edgeMap = NULL;
@@ -28,4 +30,5 @@ public:
     ~EDInterface();
 };
 
+} // namespace stag
 #endif

@@ -5,6 +5,9 @@
 #include "QuadDetector.h"
 #include "utility.h"
 
+
+namespace stag {
+
 using cv::Point2d;
 
 
@@ -363,3 +366,5 @@ bool QuadDetector::checkIfTwoCornersFaceEachother(const Corner& c1, const Corner
 
 	return true;
 }
+
+} // namespace stag

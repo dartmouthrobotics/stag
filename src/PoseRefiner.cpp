@@ -3,6 +3,7 @@
 #include "Ellipse.h"
 #include "utility.h"
 
+namespace stag {
 using cv::Point2d;
 using cv::Mat;
 
@@ -245,3 +246,5 @@ public:
 		return std::accumulate(errors.begin(), errors.end(), (double)0);
 	}
 };
+
+} // namespace stag

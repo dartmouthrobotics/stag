@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 
+namespace stag {
+
 using std::ifstream;
 using std::string;
 
@@ -69,3 +71,5 @@ bool Decoder::decode(const Codeword& c, int errCorr, int& id, int& shift)
 	}
 	return false;
 }
+
+} // namespace stag

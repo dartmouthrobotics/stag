@@ -5,6 +5,8 @@
 #include <bitset>
 #include "MarkerIDs.h"
 
+namespace stag {
+
 using std::vector;
 using std::bitset;
 
@@ -22,5 +24,7 @@ public:
 	Decoder(int hd);
 	bool decode(const Codeword& c, int errCorr, int& id, int& shift);
 };
+
+} // namespace stag
 
 #endif

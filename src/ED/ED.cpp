@@ -18,6 +18,8 @@
 #include "Utilities.h"
 #include "Timer.h"
 
+namespace stag {
+
 //Burak - won't be needing this
 //#include "ImageVideoLib.h"
 
@@ -1035,3 +1037,5 @@ EdgeMap *DetectEdgesByED10V(unsigned char *ch1Img, unsigned char *ch2Img, unsign
 
   return map;
 } //end-DetectEdgesByED10V
+
+} // namespace stag

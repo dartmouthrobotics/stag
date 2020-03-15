@@ -1,5 +1,7 @@
 #include "Marker.h"
 
+namespace stag {
+
 using cv::Point2d;
 
 Marker::Marker(const Quad &q, int inId)
@@ -61,3 +63,5 @@ void Marker::shiftCorners2(int shift)
 	// have to recalculate homography after shift
 	estimateHomography();
 }
+
+} // namespace stag

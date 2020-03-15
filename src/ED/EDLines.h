@@ -6,6 +6,9 @@
 #include "EdgeMap.h"
 #include "LineSegment.h"
 
+
+namespace stag {
+
 ///----------------------------------------------
 /// Simple class to manipulate line segments
 /// 
@@ -107,4 +110,5 @@ EDLines *DetectLinesByEDPF(EdgeMap*& map, unsigned char *srcImg, int width, int 
 /// Dump lines to file
 void DumpLines2File(EDLines *lines, char *fname);
 
+} // namespace stag
 #endif

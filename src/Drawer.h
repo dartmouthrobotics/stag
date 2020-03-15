@@ -9,8 +9,9 @@
 #include "QuadDetector.h"
 #include "Marker.h"
 
-using std::string;
+namespace stag {
 
+using std::string;
 
 class Drawer
 {
@@ -35,5 +36,7 @@ public:
 	// draws refined markers and their ellipses
 	void drawEllipses(const string& path, cv::Mat image, const vector<Marker> &markers);
 };
+
+} // namespace stag
 
 #endif

@@ -8,6 +8,8 @@
 #include "Decoder.h"
 #include "PoseRefiner.h"
 
+namespace stag {
+
 class Stag
 {
 	// if keepLogs is true, keep the intermediate results of the detection algorithm in the memory, to be dumped when asked (default: false)
@@ -39,5 +41,5 @@ public:
 	void logResults(string path = "");
 };
 
-
+} // namespace stag
 #endif

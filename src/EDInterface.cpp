@@ -3,6 +3,9 @@
 #include "EDInterface.h"
 #include "utility.h"
 
+
+namespace stag {
+
 using std::vector;
 using std::max;
 using std::min;
@@ -230,3 +233,5 @@ Point2d EDInterface::intersectionOfLineSegments(const LineSegment& line1, const 
 	}
 	return inters;
 }
+
+} // namespace stag

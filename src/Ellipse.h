@@ -2,6 +2,9 @@
 #define ELLIPSE_H 
 
 #include <vector>
+
+namespace stag {
+
 using std::vector;
 
 struct pix{
@@ -130,4 +133,5 @@ public:
 
 bool CircleFit(const vector<double> &Xs, const vector<double> &Ys, double &centerX, double &centerY, double &radius);
 
+} // namespace stag
 #endif

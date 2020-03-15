@@ -15,6 +15,9 @@
 #include "MyMath.h"
 #include "Timer.h"
 
+
+namespace stag {
+
 /** PI */
 #ifndef M_PI
 #define M_PI   3.14159265358979323846
@@ -845,3 +848,5 @@ EDLines *DetectLinesByEDPF(EdgeMap*& map, unsigned char *srcImg, int width, int 
   // delete map;
   return lines;
 } //end-DetectLinesByEDPF
+
+} // namespace stag

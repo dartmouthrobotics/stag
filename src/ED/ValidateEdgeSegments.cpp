@@ -2,8 +2,12 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <math.h>
+#include <vector>
+#include <future>
+#include <iostream>
 
 #include "ValidateEdgeSegments.h"
+#include "../threadPool.h"
 
 #define MAX_GRAD_VALUE 128*256
 
@@ -58,6 +62,37 @@ static short *ComputeLSD(unsigned char *srcImg, int width, int height, double *H
 ///---------------------------------------------------------------------------
 /// Prewitt gradient map computation during segment validation
 ///
+void computeGradsInBlock(int blockXStart, int blockYStart, int blockXStop, int blockYStop, short* gradImg, int* grads, unsigned char *srcImg, int width, int height) {
+  std::cout << "blockYStart" << blockYStart << "blockYStop " << blockYStop << std::endl;
+  for (int i=blockYStart; i<blockYStop; i++){
+    for (int j=blockXStart; j<blockXStop; j++){
+      // Prewitt Operator in horizontal and vertical direction
+      // A B C
+      // D x E
+      // F G H
+      // gx = (C-A) + (E-D) + (H-F)
+      // gy = (F-A) + (G-B) + (H-C)
+      //
+      // To make this faster: 
+      // com1 = (H-A)
+      // com2 = (C-F)
+      // Then: gx = com1 + com2 + (E-D) = (H-A) + (C-F) + (E-D) = (C-A) + (E-D) + (H-F)
+      //       gy = com1 - com2 + (G-B) = (H-A) - (C-F) + (G-B) = (F-A) + (G-B) + (H-C)
+      // 
+      int com1 = srcImg[(i+1)*width+j+1] - srcImg[(i-1)*width+j-1];
+      int com2 = srcImg[(i-1)*width+j+1] - srcImg[(i+1)*width+j-1];
+
+      int gx = abs(com1 + com2 + (srcImg[i*width+j+1] - srcImg[i*width+j-1]));
+      int gy = abs(com1 - com2 + (srcImg[(i+1)*width+j] - srcImg[(i-1)*width+j]));
+
+      int g = gx + gy;      
+
+      gradImg[i*width+j] = g;
+      grads[g]++;
+    } // end-for
+  } //end-for
+}
+
 static short *ComputePrewitt3x3(unsigned char *srcImg, int width, int height, double *H){
   short *gradImg = new short[width*height];
   memset(gradImg, 0, sizeof(short)*width*height);
@@ -65,6 +100,7 @@ static short *ComputePrewitt3x3(unsigned char *srcImg, int width, int height, do
   int maxGradValue = MAX_GRAD_VALUE;
   int *grads = new int[maxGradValue];
   memset(grads, 0, sizeof(int)*maxGradValue);
+
 
   for (int i=1; i<height-1; i++){
     for (int j=1; j<width-1; j++){
@@ -93,6 +129,34 @@ static short *ComputePrewitt3x3(unsigned char *srcImg, int width, int height, do
       grads[g]++;
     } // end-for
   } //end-for
+
+  //std::vector<std::future<void>> futures;
+  //int indRow = 1;
+  //
+  //for (indRow = 1; indRow < height - 1; indRow += IMAGE_ROWS_PER_TASK) {
+  //  int last_row = std::min(height - 1, indRow + IMAGE_ROWS_PER_TASK);
+
+  //  std::packaged_task<void()> task([=](){
+  //    computeGradsInBlock(
+  //      1,
+  //      indRow,
+  //      width-1,
+  //      last_row,
+  //      gradImg,
+  //      grads,
+  //      srcImg,
+  //      width,
+  //      height
+  //    );
+  //  });
+
+  //  futures.push_back(task.get_future());
+  //  threadPool.post(task);
+  //}
+  //
+  //for (auto& future : futures) {
+  //  future.wait();
+  //}
 
   // Compute probability function H
   int size = (width-2)*(height-2);

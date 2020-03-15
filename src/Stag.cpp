@@ -1,6 +1,7 @@
 #include "Stag.h"
 #include "Ellipse.h"
 #include "utility.h"
+#include "threadPool.h"
 
 #define HALF_PI 1.570796326794897
 
@@ -43,15 +44,6 @@ void Stag::detectMarkers(Mat inImage)
 	for (int indMarker = 0; indMarker < markers.size(); indMarker++) {
 		poseRefiner.refineMarkerPose(&edInterface, markers[indMarker]);
 
-        std::cout << "Marker " << markers[indMarker].id << std::endl;
-        std::cout << "Center " << markers[indMarker].center << std::endl;
-
-        for (auto& corner : markers[indMarker].corners) {
-            std::cout << "Corner: " << corner << std::endl;
-        }
-
-        std::cout << "H " << markers[indMarker].H << std::endl;
-
         cv::Mat camera_matrix(3, 3, CV_64FC1);
 
         camera_matrix.at<double>(0, 0) = 1045.511199;
@@ -89,9 +81,6 @@ void Stag::detectMarkers(Mat inImage)
         cv::Mat rotation_vec;
         cv::Mat translation_vec;
         cv::solvePnP(object_points, image_points, camera_matrix, distortion_coefficients, rotation_vec, translation_vec);
-
-        std::cout << "Translation: " << translation_vec * 0.17 << std::endl;
-        std::cout << "Rotation: " << rotation_vec << std::endl;
     }
 }
 

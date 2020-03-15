@@ -1,0 +1,3 @@
+[submodule "modules/thread-pool-cpp"]
+	path = modules/thread-pool-cpp
+	url = https://github.com/inkooboo/thread-pool-cpp.git

@@ -6,10 +6,42 @@ int main()
 {
 	cv::Mat image = cv::imread("/home/sam/my_photo-5.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
-	Stag stag(15, 7, true);
+	Stag stag(15, 7, false);
 
 	stag.detectMarkers(image);
-	stag.logResults("log/");
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+
+
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	stag.detectMarkers(image);
+	//stag.logResults("log/");
 
     return 0;
 }

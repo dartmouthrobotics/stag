@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.2)
 PROJECT(STag VERSION 0.0.0 LANGUAGES CXX)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
